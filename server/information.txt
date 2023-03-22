@@ -1,0 +1,55 @@
+//Выбор game_id и кода страны с минимальными ценами
+
+SELECT prices.game_id, country, Minimum
+FROM prices
+LEFT JOIN 
+	(
+		SELECT game_id, MIN(listprice) as Minimum
+		FROM prices
+		GROUP BY game_id
+	) q1 ON q1.game_id = prices.game_id
+WHERE listprice = minimum;
+//--------------------------------------------------------------------------
+
+
+//СОЗДАНИЕ БАЗЫ ДАННЫХ
+
+CREATE TABLE titles_en(
+    game_id TEXT PRIMARY KEY,
+	title TEXT,
+	description TEXT
+);
+CREATE TABLE titles_ru(
+    game_id TEXT PRIMARY KEY,
+	title TEXT,
+	description TEXT
+);
+CREATE TABLE prices(
+    price_id TEXT PRIMARY KEY,
+	game_id TEXT,
+	country TEXT,
+	listprice FLOAT,
+	msrpprice FLOAT,
+	currency TEXT
+);
+CREATE TABLE posters(
+	game_id TEXT PRIMARY KEY,
+	poster_url TEXT
+);
+CREATE TABLE actual_ids(
+	game_id TEXT PRIMARY KEY,
+	update_data TEXT
+);
+CREATE TABLE general_info(
+	game_id TEXT PRIMARY KEY,
+	game_type TEXT,
+	multiplayer TEXT,
+	coop TEXT,
+	eaaccessgame TEXT,
+	gamepassgame TEXT,
+	goldandsilversale TEXT,
+    xbox_url TEXT
+)
+//--------------------------------------------------------------------------
+
+
