@@ -16,6 +16,7 @@ var requestData_getPosters2 = {};
 var requestTime_getDescriptions2 = 0;
 var requestData_getDescriptions2 = {};
 
+// Returns {id: {url:, type:, multiplayer:, coop:, goldandsilversale:, eaaccessgame:, gamepassgame:},}
 app.get('/getGames', async (req, res) => {
 
     if ((new Date().getTime() - requestTime_getGames2) > update_time) {
@@ -67,9 +68,6 @@ app.get('/getGames', async (req, res) => {
     res.end(JSON.stringify(requestData_getGames2));
     console.log('SENDED');
 })
-
-
-
 // Returns {ID: [{country:, msrp:, lprice:, currency:}],}
 app.get('/getPrices', async (req, res) => {
 
