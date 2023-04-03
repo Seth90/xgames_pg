@@ -4,7 +4,7 @@ module.exports = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'xgames',
-    password: 'goaldemo',
+    password: '',
     port: 5432,
     max: 20,
     idleTimeoutMillis: 60000,
