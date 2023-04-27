@@ -1,30 +1,31 @@
 <template>
-    <div class="search_input">
-        <select reqired name="" class="typeSelect" id="" v-model="selectedType">
-            <option value="" disabled selected>Тип</option>
-            <option value="All">Все</option>
-            <option value="Game">Игра</option>
-            <option value="Durable">Дополнение</option>
-            <option value="Application">Приложение</option>
-        </select>
+    <div class="gamelist">
+        <div class="gamelist-toolbar">
+            <select reqired name="" class="gamelist-select-type" id="" v-model="selectedType">
+                <option value="" disabled selected>Тип</option>
+                <option value="All">Все</option>
+                <option value="Game">Игра</option>
+                <option value="Durable">Дополнение</option>
+                <option value="Application">Приложение</option>
+            </select>
+            <div class="gamelist-search">
+                <input type="text" class="gamelist-search-input" v-model="searchText" placeholder="LEGO">
+                <img class="gamelist-search__img" src="imgs/search.svg" alt="" width="15" height="15">
+            </div>
+            <select reqired name="" :class="{ hidden: notCurrencyLoaded }" class="gamelist-select-currency" id=""
+                v-model="selectedCurrency">
+                <option value="" disabled selected>Выберите валюту</option>
+                <option v-for="currency in currencyList" :value="currency">{{ currency }}</option>
+            </select>
+        </div>
+        <div v-if="filterList.length === 0">Ничего не найдено, попробуйте поискать что-то другое!</div>
+        <div class="gamelist-preloader" v-if="!wasLoaded">
+            <h4>Идет загрузка данных..</h4>
+            <img src="imgs/loading.gif" alt="Loading" />
+        </div>
 
-        <input type="text" class="searchInput" v-model="searchText" placeholder="LEGO">
-        <img class="search_img" src="imgs/search.svg" alt="" width="15" height="15">
-
-        <select reqired name="" :class="{ hidden: notCurrencyLoaded }" class="currencySelect" id=""
-            v-model="selectedCurrency">
-            <option value="" disabled selected>Выберите валюту</option>
-            <option v-for="currency in currencyList" :value="currency">{{ currency }}</option>
-        </select>
+        <AppItem v-if="wasLoaded" v-for="item in filterList" :gameObject="item" />
     </div>
-    <div v-if="filterList.length === 0">Ничего не найдено, попробуйте поискать что-то другое!</div>
-    <div class="preloader" v-if="!wasLoaded">
-        <h4>Идет загрузка данных..</h4>
-        <img src="imgs/loading.gif" alt="Loading" />
-    </div>
-
-
-    <AppItem v-if="wasLoaded" v-for="item in filterList" :gameObject="item"/>
 </template>
 
 <script>
@@ -42,7 +43,7 @@ export default {
             searchText: '',
             wasLoaded: false,
             selectedCurrency: '',
-            currencyList: ['RUB','USD'],
+            currencyList: ['RUB', 'USD'],
             currencyObject: {},
             notCurrencyLoaded: true
         }
@@ -137,4 +138,29 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style  lang="scss" scoped>
+.gamelist {
+    max-width: 1000px;
+    box-sizing: border-box;
+    select, input {
+        padding: 5px;
+    }
+
+    &-toolbar {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+        gap: 20px;
+        margin-bottom: 15px;
+    }
+    &-search {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+
+        &-input {
+            width: 100%;
+        }
+    }
+}
+</style>
