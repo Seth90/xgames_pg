@@ -18,7 +18,7 @@
                 <option v-for="currency in currencyList" :value="currency">{{ currency }}</option>
             </select>
         </div>
-        <div v-if="filterList.length === 0">Ничего не найдено, попробуйте поискать что-то другое!</div>
+        <div class="gamelist-search__error" v-if="filterList.length === 0 && wasLoaded">Ничего не найдено, попробуйте поискать что-то другое!</div>
         <div class="gamelist-preloader" v-if="!wasLoaded">
             <h4>Идет загрузка данных..</h4>
             <img src="imgs/loading.gif" alt="Loading" />
@@ -140,6 +140,7 @@ export default {
 
 <style  lang="scss" scoped>
 .gamelist {
+    margin-top: 40px;
     max-width: 1000px;
     box-sizing: border-box;
     select, input {
@@ -161,6 +162,15 @@ export default {
         &-input {
             width: 100%;
         }
+        &__error {
+            color: #ad2d2d;
+            text-align: center;
+            font-size: 20px;
+        }
+    }
+    &-preloader {
+        margin: auto;
+        text-align: center;
     }
 }
 </style>

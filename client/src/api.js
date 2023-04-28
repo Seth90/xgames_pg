@@ -58,11 +58,7 @@ export default {
     },
     async getProduct(id) {
         try {
-            const response = await HTTP.get(`/products/${id}`, {
-                headers: {
-                    Prefer: `code=200, example=Example ${id}`
-                }
-            })
+            const response = await HTTP.get(`/getProduct/${id}`)
             //console.log(response.data);
             return response.data;
         } catch (e) {

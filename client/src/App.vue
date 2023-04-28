@@ -1,11 +1,15 @@
 <template>
     <div>
-        <GameList/>
+        <Header/>
+        <router-view />
+        <Footer/>
     </div>
 </template>
 <script setup>
-import GameList from "@/components/GameList.vue"
+import Header from "@/components/Layouts/header.vue"
+//import GameList from "@/components/GameList.vue"
+import Footer from "@/components/Layouts/footer.vue"
 </script>
-<style>
-    
+<style lang="scss">
+    @import '@/assets/styles/global.scss';
 </style>
