@@ -22,7 +22,9 @@ else if (mode === 'debug') {
     getExchangesOnline = false;
 }
 // Массив со списком всех языков-регионов
-var urlRegionArrayFull = ["AR-AE", "AR-SA", "CS-CZ", "DA-DK", "DE-AT", "DE-CH", "DE-DE", "EL-GR", "EN-AE", "EN-GB", "EN-IE", "EN-ZA", "ES-CO", "ES-ES", "FI-FI", "FR-BE", "FR-CH", "FR-FR", "HE-IL", "HU-HU", "IT-IT", "NB-NO", "NL-BE", "NL-NL", "PL-PL", "PT-PT", "RU-RU", "SK-SK", "SV-SE", "TR-TR", "EN-AU", "EN-CA", "EN-HK", "EN-IN", "EN-NZ", "EN-SG", "EN-US", "ES-AR", "ES-CL", "ES-CO", "ES-MX", "JA-JP", "KO-KR", "PT-BR", "ZH-HK", "ZH-TW"];
+var urlRegionArrayFull_o = ["AR-AE", "AR-SA", "CS-CZ", "DA-DK", "DE-AT", "DE-CH", "DE-DE", "EL-GR", "EN-AE", "EN-GB", "EN-IE", "EN-ZA", "ES-CO", "ES-ES", "FI-FI", "FR-BE", "FR-CH", "FR-FR", "HE-IL", "HU-HU", "IT-IT", "NB-NO", "NL-BE", "NL-NL", "PL-PL", "PT-PT", "RU-RU", "SK-SK", "SV-SE", "TR-TR", "EN-AU", "EN-CA", "EN-HK", "EN-IN", "EN-NZ", "EN-SG", "EN-US", "ES-AR", "ES-CL", "ES-CO", "ES-MX", "JA-JP", "KO-KR", "PT-BR", "ZH-HK", "ZH-TW"];
+
+var urlRegionArrayFull = urlRegionArrayFull_o;//.slice(0,2);
 
 // Регион убран, так как там почти не бывает ссылок и зачастую используется только китайскя локализация
 var excludeRegionArrayFull = ["ZH-CN"];
@@ -85,9 +87,9 @@ async function AddDataToDatabase() {
         } catch (err) {
             console.log(err.stack)
         }
-        let text2 = 'INSERT INTO general_info (game_id, game_type, multiplayer, coop, eaaccessgame, gamepassgame, goldandsilversale, xbox_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (game_id) DO UPDATE SET game_id = $1, game_type = $2, multiplayer = $3, coop = $4, eaaccessgame = $5, gamepassgame = $6, goldandsilversale = $7, xbox_url = $8';
+        let text2 = 'INSERT INTO general_info (game_id, game_type, multiplayer, coop, eaaccessgame, gamepassgame, goldandsilversale, xbox_url, silversaleperc, enddate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (game_id) DO UPDATE SET game_id = $1, game_type = $2, multiplayer = $3, coop = $4, eaaccessgame = $5, gamepassgame = $6, goldandsilversale = $7, xbox_url = $8, silversaleperc = $9, enddate = $10';
         
-        let values2 = [key, value.type, value.multiplayer, value.coop, value.eaaccessgame, value.gamepassgame, value.goldandsilversale, value.url];
+        let values2 = [key, value.type, value.multiplayer, value.coop, value.eaaccessgame, value.gamepassgame, value.goldandsilversale, value.url, value.silversaleperc, value.endDate];
 
         try {
             query_promises.push(pool.query(text2, values2))
@@ -341,6 +343,7 @@ function ParseData(jsonData, urlRegion) {
         var purchasable = "false";
         var tempea = "false"
         var tempgs = "false";
+        var endDate = "";
         var goldaffids = [];
         var platxbox = "false";
         var platpc = "false";
@@ -476,8 +479,7 @@ function ParseData(jsonData, urlRegion) {
                             }
                         })
                     }
-                    if (av.Actions.indexOf("Purchase") !== -1 && (av.OrderManagementData.Price.MSRP !== 0 || (av.OrderManagementData.Price.MSRP === 0 && av.OrderManagementData.Price.ListPrice === 0)) &&
-                        sku.Sku.Properties.IsTrial === false) {
+                    if (av.Actions.indexOf("Purchase") !== -1 && (av.OrderManagementData.Price.MSRP !== 0 || (av.OrderManagementData.Price.MSRP === 0 && av.OrderManagementData.Price.ListPrice === 0)) && sku.Sku.Properties.IsTrial === false) {
                         if ((av.OrderManagementData.Price.ListPrice !== av.OrderManagementData.Price.MSRP || (av.OrderManagementData.Price.MSRP === 0 && av.OrderManagementData.Price.ListPrice === 0)) && ind !== 0) {
                             specialprice = av.OrderManagementData.Price.ListPrice;
                         } else {
@@ -512,8 +514,10 @@ function ParseData(jsonData, urlRegion) {
                         if (listprice < msrpprice || specialprice < msrpprice) {
                             var listdiff = msrpprice - listprice;
                             silversaleperc = Math.round(listdiff / msrpprice * 100).toString() + "%";
+                            endDate = av.Conditions.EndDate;
                         }
                     }
+
                 })
             })
             // END EACCESS, GAMEPASS, GOLD
@@ -535,7 +539,7 @@ function ParseData(jsonData, urlRegion) {
                 }
             }
 
-        } else {
+        } /*else {
             e.DisplaySkuAvailabilities.forEach(function (sku) {
                 sku.Availabilities.forEach(function (av) {
                     if (av.Actions.indexOf("Purchase") !== -1 && av.Actions.indexOf("Browse") !== -1 && (av.OrderManagementData.Price.MSRP !== 0 || (av.OrderManagementData.Price.MSRP === 0 && av.OrderManagementData.Price.ListPrice === 0)) && av.Actions.length > 2) {
@@ -548,7 +552,7 @@ function ParseData(jsonData, urlRegion) {
                     }
                 })
             })
-        }
+        }*/
         // END PLATFORM
 
         // MARKETS
@@ -619,6 +623,8 @@ function ParseData(jsonData, urlRegion) {
             multiplayer: multiplayer,
             coop: coop,
             title: title,
+            endDate: endDate,
+            golddiscount: golddiscount,
             //description: shortdesc,
             boxshot: itemBoxshot,
             //boxshotsmall: itemBoxshotSmall,
@@ -631,6 +637,7 @@ function ParseData(jsonData, urlRegion) {
             // lprice_origin: '',
             // country_origin: '',
             // currency_origin: '',
+            tempgs: tempgs,
             goldandsilversale: goldandsilversale,
             onsale: onsale,
             eaaccessgame: eaaccessgame,

@@ -58,7 +58,7 @@ export default {
     },
     async getProduct(id) {
         try {
-            const response = await HTTP.get(`/getProduct/${id}`)
+            const response = await HTTP.get(`/product/${id}`)
             //console.log(response.data);
             return response.data;
         } catch (e) {

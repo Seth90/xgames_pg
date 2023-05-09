@@ -18,13 +18,15 @@
                 <option v-for="currency in currencyList" :value="currency">{{ currency }}</option>
             </select>
         </div>
-        <div class="gamelist-search__error" v-if="filterList.length === 0 && wasLoaded">Ничего не найдено, попробуйте поискать что-то другое!</div>
+        <div class="gamelist-search__error" v-if="filterList.length === 0 && wasLoaded">Ничего не найдено, попробуйте
+            поискать что-то другое!</div>
         <div class="gamelist-preloader" v-if="!wasLoaded">
             <h4>Идет загрузка данных..</h4>
             <img src="imgs/loading.gif" alt="Loading" />
         </div>
-
-        <AppItem v-if="wasLoaded" v-for="item in filterList" :gameObject="item" />
+        <div>
+            <AppItem v-if="wasLoaded" v-for="item in filterList" :gameObject="item" />
+        </div>
     </div>
 </template>
 
@@ -66,6 +68,7 @@ export default {
             })
         }));
         dataPromises.push(api.getPrices().then((data) => {
+            console.log(data)
             Object.entries(data).forEach((entry) => {
                 const [key, value] = entry;
                 this.objectOfGames[key].country = value.country;
@@ -143,7 +146,9 @@ export default {
     margin-top: 40px;
     max-width: 1000px;
     box-sizing: border-box;
-    select, input {
+
+    select,
+    input {
         padding: 5px;
     }
 
@@ -152,7 +157,12 @@ export default {
         grid-template-columns: 1fr 2fr 1fr;
         gap: 20px;
         margin-bottom: 15px;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background: #fff;
     }
+
     &-search {
         display: flex;
         justify-content: center;
@@ -162,15 +172,16 @@ export default {
         &-input {
             width: 100%;
         }
+
         &__error {
             color: #ad2d2d;
             text-align: center;
             font-size: 20px;
         }
     }
+
     &-preloader {
         margin: auto;
         text-align: center;
     }
-}
-</style>
+}</style>

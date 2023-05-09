@@ -5,6 +5,7 @@
         </div>
         <div class="appitem-about">
             <a :href="gameObject.url" class="appitem-about__title">{{ gameObject.title }}</a>
+            <div class="appitem-about__end">Deal until: {{ gameObject.enddate.split('T')[0] }}</div>
             <div class="ecosystem">
                 <img src="/imgs/Xbox-Game-Pass-Logo.jpg" alt="" v-show="gameObject.gamepassgame === 'true'">
                 <img src="/imgs/xbox-live-gold.png" alt="" v-show="gameObject.goldandsilversale === 'true'">
@@ -18,9 +19,13 @@
                     class="appitem-price-country__flag">
                 <div>{{ сountriesShortToFull[gameObject.country] }}</div>
             </div>
-            <div class="appitem-price__lprice">{{ gameObject.lprice }} {{ gameObject.currency }}</div>
+            <div class="appitem-price__lprice">{{ gameObject.lprice }} {{ gameObject.currency }} </div>
             <div class="appitem-price__msrprpice"><s><i>{{ gameObject.msrp }} {{ gameObject.currency }}</i></s></div>
+            <div>
+                Disc: {{  gameObject.silversaleperc }}
+            </div>
         </div>
+
         <div class="appitem-buttons">
             <div class="appitem-buttons__xbox button">
                 <a :href="gameObject.url.replace('en-us', this.urlRegion[gameObject.country])" target="_blank">XBOX.COM ↗</a>
@@ -77,7 +82,9 @@ const props = defineProps({
             font-weight: bold;
             text-decoration: none;
             color: #0883d2;
-
+        }
+        &__end {
+            font-size: 10px;
         }
 
         &__description {

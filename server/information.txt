@@ -47,8 +47,11 @@ CREATE TABLE general_info(
 	coop TEXT,
 	eaaccessgame TEXT,
 	gamepassgame TEXT,
+    golddiscount TEXT,
 	goldandsilversale TEXT,
-    xbox_url TEXT
+    xbox_url TEXT,
+    silversaleperc TEXT,
+    enddate TEXT,
 )
 //--------------------------------------------------------------------------
 

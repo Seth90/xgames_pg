@@ -16,6 +16,8 @@ var requestData_getPosters2 = {};
 var requestTime_getDescriptions2 = 0;
 var requestData_getDescriptions2 = {};
 
+var requestData_getGamedata = {};
+
 // Returns {id: {url:, type:, multiplayer:, coop:, goldandsilversale:, eaaccessgame:, gamepassgame:},}
 app.get('/getGames', async (req, res) => {
 
@@ -29,8 +31,8 @@ app.get('/getGames', async (req, res) => {
             }
         })*/
 
-        let text = "SELECT game_id, game_type, multiplayer, coop, eaaccessgame, gamepassgame, goldandsilversale, xbox_url FROM general_info WHERE game_id in (SELECT game_id FROM actual_ids);"
-    
+        let text = "SELECT game_id, game_type, multiplayer, coop, eaaccessgame, gamepassgame, golddiscount, goldandsilversale, xbox_url, silversaleperc, enddate FROM general_info WHERE game_id in (SELECT game_id FROM actual_ids);"
+
         let values = [];
         let tmp_dict = {};
 
@@ -39,13 +41,17 @@ app.get('/getGames', async (req, res) => {
                 requestTime_getGames2 = new Date().getTime();
                 db_data.rows.forEach((e) => {
                     tmp_dict[e.game_id] = {
+                        id: e.game_id,
                         url: e.xbox_url,
                         type: e.game_type,
                         multiplayer: e.multiplayer,
                         coop: e.coop,
                         goldandsilversale: e.goldandsilversale,
                         eaaccessgame: e.eaaccessgame,
-                        gamepassgame: e.gamepassgame
+                        golddiscount: e.golddiscount,
+                        gamepassgame: e.gamepassgame,
+                        silversaleperc: e.silversaleperc,
+                        enddate: e.enddate
                     }
                 })
             });
@@ -53,14 +59,14 @@ app.get('/getGames', async (req, res) => {
             console.log(err.stack)
         } finally {
             //client.end();
-            
+
         }
         requestData_getGames2 = tmp_dict;
     }
     else {
         console.log('GET DATA FROM CACHE _ GAMES');
     }
-    
+
     console.log(`Data: ОК`);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -72,7 +78,7 @@ app.get('/getGames', async (req, res) => {
 app.get('/getPrices', async (req, res) => {
 
     if ((new Date().getTime() - requestTime_getPrice2) > update_time) {
-        console.log('GET DATA FROM DATABASE');
+        console.log('GET DATA FROM DATABASE _ PRICES');
         /*client.connect((err) => {
             if (err) {
                 console.error('connection error', err.stack)
@@ -82,7 +88,7 @@ app.get('/getPrices', async (req, res) => {
         })*/
 
         let text = "SELECT prices.game_id, country, listprice, msrpprice, currency FROM prices LEFT JOIN (SELECT game_id, MIN(listprice) as Minimum FROM prices GROUP BY game_id) q1 ON q1.game_id = prices.game_id WHERE listprice = minimum AND prices.game_id in (SELECT game_id FROM actual_ids);"
-    
+
         let values = [];
         let tmp_dict = {};
 
@@ -90,26 +96,26 @@ app.get('/getPrices', async (req, res) => {
             await pool.query(text, values).then((db_data) => {
                 requestTime_getPrice2 = new Date().getTime();
                 db_data.rows.forEach((e) => {
-                    tmp_dict[e.game_id] = new Array({
+                    tmp_dict[e.game_id] = {
                         country: e.country,
                         msrp: e.msrpprice,
                         lprice: e.listprice,
                         currency: "USD"
-                    })
+                    }
                 })
             });
         } catch (err) {
             console.log(err.stack)
         } finally {
             //client.end();
-            
+
         }
         requestData_getPrice2 = tmp_dict;
     }
     else {
         console.log('GET DATA FROM CACHE');
     }
-    
+
     console.log(`Data: ОК`);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -131,7 +137,7 @@ app.get('/getPosters', async (req, res) => {
         // })
 
         let text = "SELECT game_id, poster_url FROM posters WHERE game_id in (SELECT game_id FROM actual_ids);"
-    
+
         let values = [];
         let tmp_dict = {};
 
@@ -140,8 +146,8 @@ app.get('/getPosters', async (req, res) => {
                 requestTime_getPosters2 = new Date().getTime();
                 db_data.rows.forEach((e) => {
                     tmp_dict[e.game_id] = e.poster_url;
-                    })
                 })
+            })
         } catch (err) {
             console.log(err.stack)
         } finally {
@@ -152,7 +158,7 @@ app.get('/getPosters', async (req, res) => {
     else {
         console.log('GET DATA FROM CACHE _ POSTERS');
     }
-    
+
     console.log(`Data: ОК`);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -174,7 +180,7 @@ app.get('/getDescriptions', async (req, res) => {
         // })
 
         let text = "SELECT game_id, title, description FROM titles_en WHERE game_id in (SELECT game_id FROM actual_ids);"
-    
+
         let values = [];
         let tmp_dict = {};
 
@@ -187,8 +193,8 @@ app.get('/getDescriptions', async (req, res) => {
                         title: e.title,
                         description: e.description
                     };
-                    })
                 })
+            })
         } catch (err) {
             console.log(err.stack)
         } finally {
@@ -199,7 +205,7 @@ app.get('/getDescriptions', async (req, res) => {
     else {
         console.log('GET DATA FROM CACHE _ DESCRIPTIONS');
     }
-    
+
     console.log(`Data: ОК`);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -207,7 +213,57 @@ app.get('/getDescriptions', async (req, res) => {
     res.end(JSON.stringify(requestData_getDescriptions2));
     console.log('SENDED');
 })
+app.get('/product/:tagId', async (req, res) => {
 
+    let text = 'SELECT game_id, game_type, multiplayer, coop, eaaccessgame, gamepassgame, goldandsilversale, xbox_url, silversaleperc, enddate, listprice, msrpprice, country, currency, title, description, poster_url FROM titles_en INNER JOIN general_info USING(game_id) INNER JOIN posters USING(game_id) INNER JOIN prices USING(game_id) WHERE game_id = $1';
+
+    let values = [req.params.tagId];
+    let tmp_dict = {};
+
+    try {
+        await pool.query(text, values).then((db_data) => {
+            //requestTime_getPosters2 = new Date().getTime();
+            let priceArr = [];
+            db_data.rows.forEach((e) => {
+                tmp_dict = {
+                    game_id: e.game_id,
+                    game_type: e.game_type,
+                    multiplayer: e.multiplayer,
+                    coop: e.coop,
+                    eaaccessgame: e.eaaccessgame,
+                    gamepassgame: e.gamepassgame,
+                    goldandsilversale: e.goldandsilversale,
+                    xbox_url: e.xbox_url,
+                    silversaleperc: e.silversaleperc,
+                    enddate: e.enddate,
+                    title: e.title,
+                    description: e.description,
+                    poster_url: e.poster_url
+                }
+                priceArr.push({
+                    listprice: e.listprice,
+                    msrpprice: e.msrpprice,
+                    country: e.country,
+                    currency: e.currency
+                })
+            })
+            tmp_dict['prices'] = priceArr;
+        })
+    } catch (err) {
+        console.log(err.stack)
+    } finally {
+        //client.end();
+    }
+    requestData_getGamedata = tmp_dict;
+
+
+    console.log(`Data: ОК`);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Content-Type", "application/json");
+    res.end(JSON.stringify(requestData_getGamedata));
+    console.log('SENDED');
+})
 
 
 
@@ -236,92 +292,3 @@ app.get('/getExchanges', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Starting listening on port ${PORT}`)
 })
-
-
-// app.get('/getPrices', (req, res) => {
-//     console.log(req.url);
-//     //setTimeout(() => {
-//     if (fs.existsSync('./data/gamesDataPrices.json')) {
-//         let data = fs.readFileSync('./data/gamesDataPrices.json', (err) => {
-//             err ? console.log(err) : null
-//         });
-//         console.log(`Data: ОК`);
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         res.header("Content-Type", "application/json");
-//         res.end(data);
-//         console.log('SENDED')
-//     }
-//     else {
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         res.send('Not extsts');
-//         console.log('Not exist')
-//     }
-//     //}, 5000);
-// })
-
-// app.get('/getPosters_old', (req, res) => {
-//     console.log(req.url);
-//     if (fs.existsSync('./data/gamesDataPosters.json')) {
-//         let data = fs.readFileSync('./data/gamesDataPosters.json', (err) => {
-//             err ? console.log(err) : null
-//         });
-//         console.log(`Data: ОК`);
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         res.header("Content-Type", "application/json");
-//         res.end(data);
-//         console.log('OK')
-//     }
-//     else {
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         res.send('Not extsts');
-//         console.log('Not exist')
-//     }
-// })
-
-
-// app.get('/getDescriptions', (req, res) => {
-//     console.log(req.url);
-//     if (fs.existsSync('./data/gamesDataPosters.json')) {
-//         let data = fs.readFileSync('./data/gamesDataDescriptions.json', (err) => {
-//             err ? console.log(err) : null
-//         });
-//         console.log(`Data: ОК`);
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         res.header("Content-Type", "application/json");
-//         res.end(data);
-//         console.log('OK')
-//     }
-//     else {
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         res.send('Not extsts');
-//         console.log('Not exist')
-//     }
-// })
-
-
-// app.get('/getGames', (req, res) => {
-//     console.log(req.url);
-//     if (fs.existsSync('./data/gamesDataRU.json')) {
-//         let data = fs.readFileSync('./data/gamesDataRU.json', (err) => {
-//             err ? console.log(err) : null
-//         });
-//         console.log(`Data: ОК`);
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         res.header("Content-Type", "application/json");
-//         res.end(data);
-//         console.log('OK')
-//     }
-//     else {
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         res.send('Not extsts');
-//         console.log('Not exist')
-//     }
-// })
