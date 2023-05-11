@@ -4,7 +4,7 @@
             <img :src="gameObject.boxshotsmall" :alt="gameObject.title">
         </div>
         <div class="appitem-about">
-            <a :href="gameObject.url" class="appitem-about__title">{{ gameObject.title }}</a>
+            <a :href="gameObject.url" class="appitem-about__title">{{ gameObject.title }} ↗</a>
             <div class="appitem-about__end">Deal until: {{ gameObject.enddate.split('T')[0] }}</div>
             <div class="ecosystem">
                 <img src="/imgs/Xbox-Game-Pass-Logo.jpg" alt="" v-show="gameObject.gamepassgame === 'true'">

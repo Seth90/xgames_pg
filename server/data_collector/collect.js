@@ -22,7 +22,7 @@ else if (mode === 'debug') {
     getExchangesOnline = false;
 }
 // Массив со списком всех языков-регионов
-var urlRegionArrayFull_o = ["AR-AE", "AR-SA", "CS-CZ", "DA-DK", "DE-AT", "DE-CH", "DE-DE", "EL-GR", "EN-AE", "EN-GB", "EN-IE", "EN-ZA", "ES-CO", "ES-ES", "FI-FI", "FR-BE", "FR-CH", "FR-FR", "HE-IL", "HU-HU", "IT-IT", "NB-NO", "NL-BE", "NL-NL", "PL-PL", "PT-PT", "RU-RU", "SK-SK", "SV-SE", "TR-TR", "EN-AU", "EN-CA", "EN-HK", "EN-IN", "EN-NZ", "EN-SG", "EN-US", "ES-AR", "ES-CL", "ES-CO", "ES-MX", "JA-JP", "KO-KR", "PT-BR", "ZH-HK", "ZH-TW"];
+var urlRegionArrayFull_o = ["AR-EG", "AR-AE", "AR-SA", "CS-CZ", "DA-DK", "DE-AT", "DE-CH", "DE-DE", "EL-GR", "EN-AE", "EN-GB", "EN-IE", "EN-ZA", "ES-CO", "ES-ES", "FI-FI", "FR-BE", "FR-CH", "FR-FR", "HE-IL", "HU-HU", "IT-IT", "NB-NO", "NL-BE", "NL-NL", "PL-PL", "PT-PT", "RU-RU", "SK-SK", "SV-SE", "TR-TR", "EN-AU", "EN-CA", "EN-HK", "EN-IN", "EN-NZ", "EN-SG", "EN-US", "ES-AR", "ES-CL", "ES-CO", "ES-MX", "JA-JP", "KO-KR", "PT-BR", "ZH-HK", "ZH-TW"];
 
 var urlRegionArrayFull = urlRegionArrayFull_o;//.slice(0,2);
 
@@ -78,9 +78,9 @@ async function AddDataToDatabase() {
     let query_promises = [];
     // ACTUAL IDS AND GENERAL INFO
     for (const [key, value] of Object.entries(allGames)) {
-        let text1 = 'INSERT INTO actual_ids (game_id, update_data) VALUES ($1, $2) ON CONFLICT (game_id) DO UPDATE SET game_id = $1, update_data = $2';
+        let text1 = 'INSERT INTO actual_ids (game_id, update_data, until_date) VALUES ($1, $2, $3) ON CONFLICT (game_id) DO UPDATE SET game_id = $1, update_data = $2, until_date = $3';
         
-        let values1 = [key, now];
+        let values1 = [key, now, value.endDate];
         
         try {
             query_promises.push(pool.query(text1, values1))
@@ -138,7 +138,7 @@ async function AddDataToDatabase() {
     //------------------------------------------------
 
     //DELETE ALL IRRELEVANT IDS
-    let text = 'DELETE FROM actual_ids WHERE update_data <> $1';
+    let text = 'DELETE FROM actual_ids WHERE until_date < $1';
     let values = [now];
     try {
         query_promises.push(pool.query(text, values))

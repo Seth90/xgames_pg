@@ -38,7 +38,8 @@ CREATE TABLE posters(
 );
 CREATE TABLE actual_ids(
 	game_id TEXT PRIMARY KEY,
-	update_data TEXT
+	update_data TEXT,
+    until_date TEXT
 );
 CREATE TABLE general_info(
 	game_id TEXT PRIMARY KEY,
@@ -51,7 +52,7 @@ CREATE TABLE general_info(
 	goldandsilversale TEXT,
     xbox_url TEXT,
     silversaleperc TEXT,
-    enddate TEXT,
+    enddate TEXT
 )
 //--------------------------------------------------------------------------
 

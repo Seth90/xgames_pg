@@ -18,10 +18,19 @@
 
             </div>
         </div>
-        <button @click="SortList('price')">BY PRICE</button>
-        <button @click="SortList('country')">BY COUNTRY</button>
+        <!-- <button @click="SortList('price')">BY PRICE</button>
+        <button @click="SortList('country')">BY COUNTRY</button> -->
         <div class="product-prices">
+            <div class="product-price-item">
+                <div></div>
+                <div @click="SortList('country')" class="product-price-item__text">Country</div>
+                <div @click="SortList('price')" class="product-price-item__text">SellPrice</div>
+                <div>Price</div>
+                <div>Discount</div>
+                <div>Link</div>
+            </div>
             <div class="product-price-item" v-for="price in product.prices" :key="price.country">
+
                 <div><img class="product-price-item__flag" :src="this.flags[this.сountriesShortToFull[price.country]]"
                         :alt="price.country"></div>
                 <div>{{ this.сountriesShortToFull[price.country] }}</div>
@@ -90,9 +99,9 @@ export default {
 .product {
     &-top {
         display: flex;
-        justify-content: center;
+        justify-content: left;
         align-items: flex-start;
-        margin-bottom: 40px;
+        margin-bottom: 20px;
 
 
         &-middle {
@@ -147,6 +156,7 @@ export default {
             display: grid;
             grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr 1fr;
             gap: 20px;
+            text-align: center;
             margin-bottom: 10px;
             border-radius: 3px;
             border: 1px solid rgb(233, 233, 233);
@@ -155,6 +165,14 @@ export default {
             &__flag {
                 width: 30px;
                 height: 20px;
+            }
+            &__text {
+                color: #0883d2;
+                text-decoration: underline;
+                cursor: pointer;
+                &:hover {
+                    filter: brightness(70%);
+                }
             }
         }
     }

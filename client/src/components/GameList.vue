@@ -18,6 +18,7 @@
                 <option v-for="currency in currencyList" :value="currency">{{ currency }}</option>
             </select>
         </div>
+        <div class="gamelist-counts">{{ shown_count }} / {{ total_count }}</div>
         <div class="gamelist-search__error" v-if="filterList.length === 0 && wasLoaded">Ничего не найдено, попробуйте
             поискать что-то другое!</div>
         <div class="gamelist-preloader" v-if="!wasLoaded">
@@ -47,7 +48,9 @@ export default {
             selectedCurrency: '',
             currencyList: ['RUB', 'USD'],
             currencyObject: {},
-            notCurrencyLoaded: true
+            notCurrencyLoaded: true,
+            total_count: 0,
+            shown_count: 0
         }
     },
     async mounted() {
@@ -68,7 +71,7 @@ export default {
             })
         }));
         dataPromises.push(api.getPrices().then((data) => {
-            console.log(data)
+            //console.log(data)
             Object.entries(data).forEach((entry) => {
                 const [key, value] = entry;
                 this.objectOfGames[key].country = value.country;
@@ -96,6 +99,7 @@ export default {
             //console.log(this.arrayOfGames[0])
             this.arrayOfGames.sort((prev, next) => (prev.title > next.title) - (prev.title < next.title));
             this.wasLoaded = true;
+            this.total_count = this.arrayOfGames.length;
         })
 
 
@@ -135,6 +139,7 @@ export default {
                 }
             }
             /* -----END Пересчет в выбранную валюту ---- */
+            this.shown_count = tmpArray.length;
             return tmpArray;
         }
     }
@@ -146,6 +151,13 @@ export default {
     margin-top: 40px;
     max-width: 1000px;
     box-sizing: border-box;
+
+    &-counts {
+        font-size: 12px;
+        padding-left: 10px;
+        padding-bottom: 10px;
+        font-style: italic;
+    }
 
     select,
     input {

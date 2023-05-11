@@ -7,6 +7,9 @@ let app = createApp(App);
 
 /* Словарь соответствий изображений флага и страны */
 app.config.globalProperties.flags = {
+    "Egypt": "/imgs/flags/eg.png",
+    "Hong Kong S.A.R.": "/imgs/flags/hk.png",
+    "Austria": "/imgs/flags/at.png",
     "U.A.E.": "/imgs/flags/ae.png",
     "Russia": "/imgs/flags/ru.png",
     "Argentina": "/imgs/flags/ar.png",
@@ -33,6 +36,9 @@ app.config.globalProperties.flags = {
 };
 /* Словарь соответствий кодf страны и её полного названия */
 app.config.globalProperties.сountriesShortToFull = {
+    "EG": "Egypt",
+    "AT": "Austria",
+    "HK": "Hong Kong S.A.R.",
     "RU": "Russia",
     "AE": "U.A.E.",
     "AR": "Argentina",
@@ -59,6 +65,9 @@ app.config.globalProperties.сountriesShortToFull = {
 }
 /* Словарь соответствий страны и её кода (код языка + код страны) для получения правильной ссылки на магазин xbox */
 app.config.globalProperties.urlRegion = {
+    "EG": "AR-EG",
+    "AT": "DE-AT",
+    "HK": "EN-HK",
     "RU": "RU-RU",
     "AE": "AR-AE",
     "AR": "ES-AR",
