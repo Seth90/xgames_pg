@@ -2,7 +2,6 @@
     <div class="main">
         <Header />
         <div class="main-view">
-            <NavBar/>
             <router-view />
         </div>
 
@@ -22,8 +21,9 @@ import Footer from "@/components/Layouts/footer.vue"
     margin: auto;
     max-width: 1440px;
     &-view {
-        display: grid;
-        grid-template-columns: 1fr 5fr;
+        display: flex;
+        justify-content: center;
+        align-items: start;
     }
 }
 </style>

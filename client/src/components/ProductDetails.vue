@@ -36,7 +36,7 @@
                 <div>{{ this.сountriesShortToFull[price.country] }}</div>
                 <div>{{ price.listprice }} {{ price.currency }}</div>
                 <div><s><i>{{ price.msrpprice }} {{ price.currency }}</i></s></div>
-                <div>Discount: {{ Math.round((price.msrpprice - price.listprice) / price.msrpprice * 100).toString() + "%"
+                <div>{{ Math.round((price.msrpprice - price.listprice) / price.msrpprice * 100).toString() + "%"
                 }}</div>
                 <div><a href="xbox">XBOX</a></div>
             </div>

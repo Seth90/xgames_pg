@@ -20,16 +20,16 @@
                 <div>{{ сountriesShortToFull[gameObject.country] }}</div>
             </div>
             <div class="appitem-price__lprice">{{ gameObject.lprice }} {{ gameObject.currency }} </div>
-            <div class="appitem-price__msrprpice"><s><i>{{ gameObject.msrp }} {{ gameObject.currency }}</i></s></div>
+            <div class="appitem-price__msrpprice"><s><i>{{ gameObject.msrp }} {{ gameObject.currency }}</i></s></div>
             <div>
                 Disc: {{  gameObject.silversaleperc }}
             </div>
         </div>
 
         <div class="appitem-buttons">
-            <div class="appitem-buttons__xbox button">
+            <!-- <div class="appitem-buttons__xbox button">
                 <a :href="gameObject.url.replace('en-us', this.urlRegion[gameObject.country])" target="_blank">XBOX.COM ↗</a>
-            </div>
+            </div> -->
 
             <router-link :to="`products/${gameObject.id}`">
                 <div class="appitem-buttons__more button">MORE</div>
@@ -53,13 +53,16 @@ const props = defineProps({
 .appitem {
     display: grid;
     grid-template-columns: 80px 5fr 1fr 1fr;
+    grid-template-areas: "poster about price buttons";
     column-gap: 10px;
     margin-bottom: 15px;
     border-bottom: 1px solid rgb(192, 192, 192);
     padding: 5px;
+    padding-bottom: 15px;
 
 
     &-poster {
+        grid-area: poster;
         img {
             display: block;
             width: 80px;
@@ -69,6 +72,7 @@ const props = defineProps({
     }
 
     &-about {
+        grid-area: about;
         display: flex;
         justify-content: flex-start;
         align-items: left;
@@ -98,6 +102,7 @@ const props = defineProps({
     }
 
     &-price {
+        grid-area: price;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -120,9 +125,14 @@ const props = defineProps({
             font-weight: bold;
             font-size: 18px;
         }
+        &__msrpprice {
+            font-weight: bold;
+            font-size: 14px;
+        }
     }
 
     &-buttons {
+        grid-area: buttons;
         display: flex;
         justify-content: center;
         flex-direction: column;
@@ -163,15 +173,30 @@ const props = defineProps({
             }
 
             a {
-                color: #2eaf2e !important;
+                color: #0883d2 !important;
 
                 &:visited {
-                    color: green;
+                    color: 0883d2;
                 }
             }
         }
 
-        &__more {}
+        &__more {
+            color: #0883d2;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    }
+    @media screen and (max-width: 916px) {
+        .appitem {
+            grid-template-areas: "poster about"
+                                 "price buttons";
+            &-about {
+                &__description {
+                    display: none;
+                }
+            }
+        }
     }
 }
 </style>

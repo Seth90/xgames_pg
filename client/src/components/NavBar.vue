@@ -3,13 +3,12 @@
         <div class="nf navigation">
             <div class="navigation-item item">
                 <img src="/imgs/link.png" />
-
             </div>
             <div class="navigation-item canhide">Главная</div>
             <div class="navigation-item item"><img src="/imgs/link.png" /></div>
             <div class="navigation-item canhide">Скидки недели</div>
             <div class="navigation-item item"><img src="/imgs/link.png" /></div>
-            <div class="navigation-item canhide">Все предложения</div>
+            <div class="navigation-item canhide"><a href="/allDeals">Все предложения</a></div>
             <div class="navigation-item item"><img src="/imgs/link.png" /></div>
             <div class="navigation-item canhide">Nav1</div>
             <div class="navigation-item item"><img src="/imgs/link.png" /></div>
@@ -20,21 +19,6 @@
             <div class="navigation-item canhide">Nav1</div>
             <div class="navigation-item item"><img src="/imgs/link.png" /></div>
             <div class="navigation-item canhide">Nav1</div>
-            <!-- <div class="navigation-iconside "> -->
-
-            <!-- </div>
-            <Transition>
-                <div class="navigation-textside" v-if="!isShortMenu">
-
-                    
-                    
-                    <div class="navigation-item item">Nav1</div>
-                    <div class="navigation-item item">Nav1</div>
-                    <div class="navigation-item item">Nav1</div>
-                    <div class="navigation-item item">Nav1</div>
-                    
-                </div>
-            </Transition> -->
         </div>
     </nav>
 </template>
@@ -50,7 +34,7 @@ export default {
         }
     },
     mounted() {
-        var toggle = false;
+        var toggle = true;
         document.querySelector('.header-menu').addEventListener('click', () => {
             let divs = document.querySelectorAll('.canhide');
             if (toggle) {
@@ -79,20 +63,22 @@ export default {
 .v-leave-active {
     transition: opacity 0.5s ease;
 }
-
 .v-enter-from,
 .v-leave-to {
     opacity: 0;
 }
 
-nav {
+div {
+    //transition: 0.3s;
     //width: 100%;
 }
+
 .nf {
     display: grid;
     grid-template-columns: 1fr 6fr;
     gap: 10px;
 }
+
 .ns {
     display: grid;
     grid-template-columns: 1fr;
@@ -104,11 +90,15 @@ nav {
     /* display: grid;
     grid-template-columns: 1fr 6fr;
     gap: 10px; */
-    width: 100%;
+    max-width: 220px;
+   
+    //width: 100%;
     padding: 10px;
     transition: 0.3s;
     border: 1px solid red;
-
+    z-index: 99;
+    background: #616161;
+    color: white;
 
     &-item {
         border: 1px solid grey;

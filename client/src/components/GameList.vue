@@ -149,10 +149,11 @@ export default {
 <style  lang="scss" scoped>
 .gamelist {
     margin-top: 40px;
-    max-width: 100%;
+    width: 90%;
     box-sizing: border-box;
     padding: 30px;
     transition: 0.3s;
+    margin: auto;
 
     &-counts {
         font-size: 12px;
