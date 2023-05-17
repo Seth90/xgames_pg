@@ -10,7 +10,6 @@
 </template>
 <script setup>
 import Header from "@/components/Layouts/header.vue"
-import NavBar from "@/components/NavBar.vue"
 import Footer from "@/components/Layouts/footer.vue"
 
 </script>
@@ -18,12 +17,16 @@ import Footer from "@/components/Layouts/footer.vue"
 @import '@/assets/styles/global.scss';
 
 .main {
-    margin: auto;
     max-width: 1440px;
-    &-view {
-        display: flex;
-        justify-content: center;
-        align-items: start;
-    }
+    min-height: 100vh; 
+    margin: auto; 
+    display:flex; 
+    flex-direction:column; 
+
+    // &-view {
+    //     display: flex;
+    //     justify-content: center;
+    //     align-items: start;
+    // }
 }
 </style>
