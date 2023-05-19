@@ -6,6 +6,16 @@ export const HTTP = axios.create({
 });
 
 export default {
+    async getComingSoonGames() {
+        try {
+            const response = await HTTP.get('/getComingSoonGames');
+            //console.log(response.data);
+            return response.data;
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
     async getGeneralInfo() {
         try {
             const response = await HTTP.get('/getGames');

@@ -264,14 +264,30 @@ app.get('/product/:tagId', async (req, res) => {
     res.end(JSON.stringify(requestData_getGamedata));
     console.log('SENDED');
 })
-
-
-
-
 app.get('/getExchanges', (req, res) => {
     console.log(req.url);
     if (fs.existsSync('./data/currency_DO-NOT-DELETE.json')) {
         let data = fs.readFileSync('./data/currency_DO-NOT-DELETE.json', (err) => {
+            err ? console.log(err) : null
+        });
+        console.log(`Data: ОК`);
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        res.header("Content-Type", "application/json");
+        res.end(data);
+        console.log('OK')
+    }
+    else {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        res.send('Not extsts');
+        console.log('Not exist')
+    }
+})
+app.get('/getComingSoonGames', (req, res) => {
+    console.log(req.url);
+    if (fs.existsSync('./data/comingSoonGames.json')) {
+        let data = fs.readFileSync('./data/comingSoonGames.json', (err) => {
             err ? console.log(err) : null
         });
         console.log(`Data: ОК`);

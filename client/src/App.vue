@@ -22,7 +22,7 @@ import Footer from "@/components/Layouts/footer.vue"
     margin: auto; 
     display:flex; 
     flex-direction:column; 
-
+    justify-content: space-between;
     // &-view {
     //     display: flex;
     //     justify-content: center;

@@ -1,17 +1,25 @@
 <template>
+    <!-- !!!!!NEED TO FIX CLASSNAMES!!!-->
     <div class="slider">
-    <swiper :navigation="true" :modules="modules" class="mySwiper">
-        <swiper-slide class="slide"><div class="tmp_slide">Slide 1</div> </swiper-slide>
-        <swiper-slide class="slide">Slide 2</swiper-slide>
-        <swiper-slide class="slide">Slide 3</swiper-slide>
-        <swiper-slide class="slide">Slide 4</swiper-slide>
-        <swiper-slide class="slide">Slide 5</swiper-slide>
-        <swiper-slide class="slide">Slide 6</swiper-slide>
-        <swiper-slide class="slide">Slide 7</swiper-slide>
-        <swiper-slide class="slide">Slide 8</swiper-slide>
-        <swiper-slide class="slide">Slide 9</swiper-slide>
-    </swiper>
-</div>
+        <swiper :navigation="true" :modules="modules" class="mySwiper" :loop="true" :pagination="{
+            clickable: true,
+        }">
+            <swiper-slide v-for="game in cs_data">
+                <div class="slide">
+                    <div class="slide-poster">
+                        <img :src="game.boxshot" :alt="game.title" />
+                    </div>
+                    <div class="slide-info">
+                        <div class="slide-info__title">{{ game.title }}</div>
+                        <div class="slide-info__preorder">{{ game.preOrderReleaseDate }}</div>
+                        <div class="slide-info__orig">{{ game.originalReleaseDate }}</div>
+                        <div class="slide-info__type">{{ game.type }}</div>
+                    </div>
+
+                </div>
+            </swiper-slide>
+        </swiper>
+    </div>
 </template>
 <script>
 // Import Swiper Vue.js components
@@ -26,9 +34,15 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper';
 
 export default {
+    props: ['cs_data'],
     components: {
         Swiper,
         SwiperSlide,
+    },
+    data() {
+        return {
+            data: this.cs_data
+        }
     },
     setup() {
         return {
@@ -41,15 +55,28 @@ export default {
 <style lang="scss">
 @import 'swiper/css';
 @import 'swiper/css/navigation';
-.tmp_slide {
-    min-height: 500px;
-}
+
 .slider {
     max-width: 1440px;
+
 }
+
 .slide {
     //max-width: 1440px !important;
-    background: grey;
-    padding: 30px;
+    background: rgb(228, 225, 225);
+    padding: 50px;
+    display: flex;
+    justify-content: start;
+    gap: 30px;
+    align-items: center;
+    min-height: 500px;
+
+    &-info {
+        &__title {
+            font-size: 4em;
+            font-weight: bold;
+        }
+    }
+
 }
 </style>
