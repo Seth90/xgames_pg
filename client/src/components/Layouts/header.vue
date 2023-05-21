@@ -7,7 +7,7 @@
                     <div class="header-navigation__item"><a href="/">Main</a></div>
                     <div class="header-navigation__item"><a href="/allDeals">All Deals</a></div>
                     <div class="header-navigation__item"><a href="/weekDeals">Deals of the week</a></div>
-                    <div class="header-navigation__item"><a href="/ComingSoon">Coming Soon</a></div>
+                    <div class="header-navigation__item"><a href="#comingsoon">Coming Soon</a></div>
                 </div>
             </nav>
         </div>

@@ -44,29 +44,6 @@
     </div>
 </template>
 
-<script setup>
-//import { ref, onMounted } from 'vue';
-//import api from '@/api.js';
-
-// const product = ref({});
-// const props = defineProps({
-//     // product: {
-//     //     type: Object,
-//     //     required: true,
-//     //     default: {
-//     //         prices: []
-//     //     }
-//     // },
-//     id: {
-//         type: String,
-//         required: true
-//     }
-// })
-// onMounted(async () => {
-//     product.value = await api.getProduct(props.id);
-// })
-
-</script>
 <script>
 import api from '@/api.js';
 export default {
@@ -78,7 +55,8 @@ export default {
     },
     methods: {
         async GetData() {
-            this.product = await api.getProduct(this.id);
+            // this.product = await api.getProduct(this.id);
+            api.getProduct(this.id).then((d) => this.product = d);
         },
         SortList(type) {
             if (type === 'price') {

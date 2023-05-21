@@ -5,15 +5,17 @@
             clickable: true,
         }">
             <swiper-slide v-for="game in cs_data">
-                <div class="slide">
+                <div class="slide" >
                     <div class="slide-poster">
                         <img :src="game.boxshot" :alt="game.title" />
                     </div>
                     <div class="slide-info">
                         <div class="slide-info__title">{{ game.title }}</div>
-                        <div class="slide-info__preorder">{{ game.preOrderReleaseDate }}</div>
-                        <div class="slide-info__orig">{{ game.originalReleaseDate }}</div>
+                        <div class="slide-info__orig">RELEASE DATE: {{ game.originalReleaseDate }}</div>
+                        <div class="slide-info__preorder">PREORDER DATE: {{ game.preOrderReleaseDate }}</div>
                         <div class="slide-info__type">{{ game.type }}</div>
+                        <div class="slide-info__type">{{ game.id }}</div>
+
                     </div>
 
                 </div>
@@ -27,11 +29,10 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 
 // Import Swiper styles
 import 'swiper/css';
-
 import 'swiper/css/navigation';
 
 // import required modules
-import { Navigation } from 'swiper';
+import { Navigation, Pagination } from 'swiper';
 
 export default {
     props: ['cs_data'],
@@ -46,7 +47,7 @@ export default {
     },
     setup() {
         return {
-            modules: [Navigation],
+            modules: [Navigation, Pagination],
         };
     },
 };
@@ -56,6 +57,10 @@ export default {
 @import 'swiper/css';
 @import 'swiper/css/navigation';
 
+:root {
+    --dc: 1vh + 1vw;
+}
+
 .slider {
     max-width: 1440px;
 
@@ -63,18 +68,23 @@ export default {
 
 .slide {
     //max-width: 1440px !important;
-    background: rgb(228, 225, 225);
+    //background: rgb(228, 225, 225);
     padding: 50px;
     display: flex;
     justify-content: start;
     gap: 30px;
-    align-items: center;
+    align-items: flex-start;
     min-height: 500px;
 
     &-info {
         &__title {
-            font-size: 4em;
+            font-size: calc(var(--dc) * 3);
             font-weight: bold;
+        }
+    }
+    &-poster {
+        img {
+            width: calc(var(--dc) * 20);
         }
     }
 

@@ -1,5 +1,6 @@
 <template>
     <div class="gamelist">
+        <div class="gamelist-title">ALL DEALS</div>
         <div class="gamelist-toolbar">
             <select reqired name="" class="gamelist-select-type" id="" v-model="selectedType">
                 <option value="" disabled selected>Тип</option>
@@ -10,7 +11,7 @@
             </select>
             <div class="gamelist-search">
                 <input type="text" class="gamelist-search-input" v-model="searchText" placeholder="LEGO">
-                <img class="gamelist-search__img" src="imgs/search.svg" alt="" width="15" height="15">
+                <img class="gamelist-search__img" src="/imgs/search.svg" alt="" width="15" height="15">
             </div>
             <select reqired name="" :class="{ hidden: notCurrencyLoaded }" class="gamelist-select-currency" id=""
                 v-model="selectedCurrency">
@@ -23,7 +24,7 @@
             поискать что-то другое!</div>
         <div class="gamelist-preloader" v-if="!wasLoaded">
             <h4>Идет загрузка данных..</h4>
-            <img src="imgs/loading.gif" alt="Loading" />
+            <img src="/imgs/loading.gif" alt="Loading" />
         </div>
         <div>
             <AppItem v-if="wasLoaded" v-for="item in filterList" :gameObject="item" />
@@ -54,54 +55,56 @@ export default {
         }
     },
     async mounted() {
-        this.objectOfGames = await api.getGeneralInfo();
-        let dataPromises = [];
-        dataPromises.push(api.getDescriptions().then((data) => {
-            Object.entries(data).forEach((entry) => {
-                const [key, value] = entry;
-                this.objectOfGames[key].title = value.title;
-                this.objectOfGames[key].description = value.description;
-                this.objectOfGames[key].shortDescription = String(value.description).substring(0, 200) + '...';
-            })
-        }));
-        dataPromises.push(api.getPosters().then((data) => {
-            Object.entries(data).forEach((entry) => {
-                const [key, value] = entry;
-                this.objectOfGames[key].boxshotsmall = value;
-            })
-        }));
-        dataPromises.push(api.getPrices().then((data) => {
-            //console.log(data)
-            Object.entries(data).forEach((entry) => {
-                const [key, value] = entry;
-                this.objectOfGames[key].country = value.country;
-                this.objectOfGames[key].msrp_usd = value.msrp;
-                this.objectOfGames[key].msrp = value.msrp;
-                this.objectOfGames[key].lprice_usd = value.lprice;
-                this.objectOfGames[key].lprice = value.lprice;
-                this.objectOfGames[key].currency = value.currency;
-            })
-        }));
-        dataPromises.push(api.getExchanges().then((data) => {
-            this.currencyObject = data.quotes;
-            Object.entries(data.quotes).forEach((entry) => {
-                const [key, value] = entry;
-                this.currencyList.push(key.substring(3, 6));
-            })
-            this.notCurrencyLoaded = false;
-        }));
+        // this.objectOfGames = await api.getGeneralInfo();
+        api.getGeneralInfo().then((gidata) => {
+            this.objectOfGames = gidata;
+            let dataPromises = [];
+            dataPromises.push(api.getDescriptions().then((data) => {
+                Object.entries(data).forEach((entry) => {
+                    const [key, value] = entry;
+                    this.objectOfGames[key].title = value.title;
+                    this.objectOfGames[key].description = value.description;
+                    this.objectOfGames[key].shortDescription = String(value.description).substring(0, 200) + '...';
+                })
+            }));
+            dataPromises.push(api.getPosters().then((data) => {
+                Object.entries(data).forEach((entry) => {
+                    const [key, value] = entry;
+                    this.objectOfGames[key].boxshotsmall = value;
+                })
+            }));
+            dataPromises.push(api.getPrices().then((data) => {
+                //console.log(data)
+                Object.entries(data).forEach((entry) => {
+                    const [key, value] = entry;
+                    this.objectOfGames[key].country = value.country;
+                    this.objectOfGames[key].msrp_usd = value.msrp;
+                    this.objectOfGames[key].msrp = value.msrp;
+                    this.objectOfGames[key].lprice_usd = value.lprice;
+                    this.objectOfGames[key].lprice = value.lprice;
+                    this.objectOfGames[key].currency = value.currency;
+                })
+            }));
+            dataPromises.push(api.getExchanges().then((data) => {
+                this.currencyObject = data.quotes;
+                Object.entries(data.quotes).forEach((entry) => {
+                    const [key, value] = entry;
+                    this.currencyList.push(key.substring(3, 6));
+                })
+                this.notCurrencyLoaded = false;
+            }));
 
-        Promise.all(dataPromises).then(() => {
-            Object.entries(this.objectOfGames).forEach((entry) => {
-                const [key, value] = entry;
-                this.arrayOfGames.push(value);
-            });
-            //console.log(this.arrayOfGames[0])
-            this.arrayOfGames.sort((prev, next) => (prev.title > next.title) - (prev.title < next.title));
-            this.wasLoaded = true;
-            this.total_count = this.arrayOfGames.length;
+            Promise.all(dataPromises).then(() => {
+                Object.entries(this.objectOfGames).forEach((entry) => {
+                    const [key, value] = entry;
+                    this.arrayOfGames.push(value);
+                });
+                //console.log(this.arrayOfGames[0])
+                this.arrayOfGames.sort((prev, next) => (prev.title > next.title) - (prev.title < next.title));
+                this.wasLoaded = true;
+                this.total_count = this.arrayOfGames.length;
+            })
         })
-
 
 
     },
@@ -155,6 +158,12 @@ export default {
     transition: 0.3s;
     margin: auto;
 
+    &-title {
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 25px;
+    }
+
     &-counts {
         font-size: 12px;
         padding-left: 10px;
@@ -199,4 +208,5 @@ export default {
         margin: auto;
         text-align: center;
     }
-}</style>
+}
+</style>

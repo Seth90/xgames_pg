@@ -138,7 +138,7 @@ async function AddDataToDatabase() {
     //------------------------------------------------
 
     //DELETE ALL IRRELEVANT IDS
-    let text = 'DELETE FROM actual_ids WHERE until_date < $1';
+    let text = 'DELETE FROM actual_ids WHERE until_date < $1 OR until_date IS NULL';
     let values = [now];
     try {
         query_promises.push(pool.query(text, values))
