@@ -1,6 +1,7 @@
 const pool = require('../sql/database_actions.js');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const comingSoonGames = require('./ComingSoon_collect.js');
 
 /*const obj = JSON.parse(fs.readFileSync('./data/gamesDataDescriptions.json', 'utf8'));*/
 const headers = new Headers({
@@ -47,6 +48,7 @@ console.time('CollectAllData');
 
 // MAIN // Выполнение основных функций
 console.time('CollectAllData');
+comingSoonGames.GetComingSoonGames();
 GetAllData()
     .then(async () => {
         //console.log("Getting description for EN language..");
